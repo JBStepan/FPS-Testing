@@ -1,0 +1,81 @@
+[gd_scene load_steps=13 format=3 uid="uid://cjmbcfmjxnlr8"]
+
+[ext_resource type="Texture2D" uid="uid://dfxnagcqyln33" path="res://Assets/Textures/Prototype/Dark/texture_09.png" id="1_kxq84"]
+[ext_resource type="PackedScene" uid="uid://dyw4ovhq5j13l" path="res://Environment/Testing/proto_box.tscn" id="2_kwsqs"]
+[ext_resource type="PackedScene" uid="uid://8rirm8erenkk" path="res://Environment/Testing/proto_wall.tscn" id="3_df5x6"]
+[ext_resource type="PackedScene" uid="uid://bxmybb68met7b" path="res://Characters/Player/Player.tscn" id="4_17aq7"]
+[ext_resource type="PackedScene" uid="uid://drsvrhi17j6lv" path="res://Environment/Testing/test_interactable.tscn" id="5_ohyjt"]
+[ext_resource type="PackedScene" uid="uid://b3a0blfhge07i" path="res://Environment/Objects/test_rigid_body.tscn" id="6_dkiuw"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_56ls5"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_o2jpj"]
+sky_material = SubResource("ProceduralSkyMaterial_56ls5")
+
+[sub_resource type="Environment" id="Environment_t50l6"]
+background_mode = 2
+sky = SubResource("Sky_o2jpj")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v253a"]
+albedo_texture = ExtResource("1_kxq84")
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_hc8mu"]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_ehue6"]
+data = PackedVector3Array(1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, -1, 1, 0, -1)
+
+[node name="TestWorld" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_t50l6")
+
+[node name="Environment" type="Node3D" parent="."]
+
+[node name="Ground" type="MeshInstance3D" parent="Environment"]
+transform = Transform3D(15, 0, 0, 0, 15, 0, 0, 0, 15, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_v253a")
+mesh = SubResource("PlaneMesh_hc8mu")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Environment/Ground"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/Ground/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_ehue6")
+
+[node name="ProtoBox" parent="Environment" instance=ExtResource("2_kwsqs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, 0)
+skeleton = NodePath("../..")
+
+[node name="ProtoBox2" parent="Environment" instance=ExtResource("2_kwsqs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, 2)
+skeleton = NodePath("../..")
+
+[node name="ProtoBox3" parent="Environment" instance=ExtResource("2_kwsqs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, -2)
+skeleton = NodePath("../..")
+
+[node name="ProtoWall" parent="Environment" instance=ExtResource("3_df5x6")]
+transform = Transform3D(0.5, 0, 0, 0, 3, 0, 0, 0, 5, -4, 1.5, 0)
+
+[node name="Player" parent="." instance=ExtResource("4_17aq7")]
+
+[node name="TestInteractable" parent="." instance=ExtResource("5_ohyjt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.127849, 5)
+
+[node name="TestRigidBody" parent="." instance=ExtResource("6_dkiuw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -5)
+
+[node name="TestRigidBody2" parent="." instance=ExtResource("6_dkiuw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -5)
+
+[node name="TestRigidBody3" parent="." instance=ExtResource("6_dkiuw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, -5)
